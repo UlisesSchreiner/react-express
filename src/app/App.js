@@ -10,6 +10,7 @@ class App extends Component {
             title: '',
             description: '',
             tasks: [],
+            events: [],
             _id: ''
         };
         this.addTask = this.addTask.bind(this);
@@ -57,6 +58,7 @@ class App extends Component {
     componentDidMount()
     {
         this.fetchTasks();
+        this.pruebaApi();
     }
 
     deleteTask(id){
@@ -115,7 +117,15 @@ class App extends Component {
         });
     }
 
-    
+    pruebaApi()
+    {
+        fetch('api/tasks/events')
+        .then(res => res.json())
+        .then(data => {
+            this.setState({events: data});
+        })
+        .catch(err => console.log(err));
+    }
 
 
     render(){
@@ -124,8 +134,11 @@ class App extends Component {
                 {/* navegacion */}
                 <nav className="light-blue darken-4">
                     <div className="container">
-                        <a className="brand-logo" href="/">Mearn Stack</a>
+                        <a className="brand-logo" href="/">Energy View</a>
                     </div>
+                    
+                    <button className="btn light-blue darken-4" style={{height: "60px"}}><i className="material-icons">account_circle</i></button>
+                    
                 </nav>
 
                 {/* Principal */}
@@ -150,7 +163,7 @@ class App extends Component {
                                         </div>
 
                                         <button type="submit" className="btn light-blue darken-4" >SEND</button>  
-
+                                        <button className="btn light-blue darken-4" onClick={() => this.pruebaApi()}>EVENTS</button>
                                     </form>
                                 </div>
                             </div>
@@ -176,6 +189,30 @@ class App extends Component {
                                                          <button className="btn light-blue darken-4" onClick={() => this.deleteTask(tasks._id)} style={{margin: '2px'}}><i className="material-icons">delete</i></button>
                                                           <button className="btn light-blue darken-4" onClick={() => this.editTask(tasks._id)} style={{margin: '2px'}} ><i className="material-icons">edit</i></button>
                                                     </td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div> 
+
+                        <div className="col s7">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>volt</th>
+                                        <th>watt</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.events.map(events => {
+                                            return (
+                                                <tr key={events._id}>
+                                                    <td>{events.v.volt}</td>
+                                                    <td>{events.v.watt}</td>
                                                 </tr>
                                             )
                                         })

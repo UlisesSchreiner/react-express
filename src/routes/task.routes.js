@@ -3,11 +3,21 @@ const router = express.Router();
 
 const Task = require('../models/task');
 
+const events = require('../models/events');
+
 router.get('/', async (req, res) => {
  const task = await Task.find();
   console.log(task);
   res.json(task);
 });
+
+router.get('/events', async (req, res) => {
+  const event = await events.find();
+
+  console.log(event);
+  res.send(event);
+  });
+  
 
 router.get('/:id', async (req, res) => {
 const task = await Task.findById(req.params.id);
