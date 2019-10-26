@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const URI = 'mongodb://localhost/test';
+const URI = 'mongodb://localhost/api';
 
 mongoose.connect(URI)
 .then(db => console.log('DB is connected'))

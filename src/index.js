@@ -6,14 +6,14 @@ const { mongoose } = require('./database');
 const app = express();
 
 // Settings 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 
 // midelwares 
 app.use(morgan('dev'));
 app.use(express.json());
 
 // routes
-app.use('/api/tasks',require('./routes/task.routes'));
+app.use('/api',require('./routes/task.routes'));
 
 // Static files
 app.use(express.static(__dirname + '/public'));

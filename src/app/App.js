@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React  from 'react';
 // import { threadId } from 'worker_threads';
 
+import Devices from './Devices';
 
-class App extends Component {
+class App extends React.Component {
 
     constructor(){
         super();
@@ -11,31 +12,86 @@ class App extends Component {
             description: '',
             tasks: [],
             events: [],
-            _id: ''
+            _id: '',
+            userName: '',
+            devices: [],
+            devicesArray: [],
+            eventsArray: [],
+            objeto: {
+                name: 'ulises',
+                edad: 22
+            }
         };
+        /*
         this.addTask = this.addTask.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        */
+     
     }
 
 
-    addTask(e) {
-       if (this.setState._id == e._id)
-       {
-       fetch('api/tasks/' + this.state._id, {
-           method: 'PUT',
-           body: JSON.stringify(this.state),
-           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-       })
-       .then(res => res.json())
-       .then(data => console.log(data))
-       .catch(err => console.log(err))
-       } else {
-        fetch('/api/tasks', {
+    loadDevices()
+    {
+        var array = [];
+        
+            //console.log(JSON.stringify({deviceId: this.state.devices[i]}));
+            fetch('/api/devices/', {
+                method: 'POST',
+                body: JSON.stringify({deviceId: this.state.userName}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type':'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+               //this.setState({devicesArray: data});
+               array = data;
+               var obj = { user: "default", i: 0, e: 0, name: "ADD", password: "0", type: 0 };
+               array.push(obj);
+               console.log(array);
+               this.setState({devicesArray: array});
+             })
+            .catch(err => console.log(err));
+        
+        
+       
+       
+    }
+
+    
+
+
+    loadUser()
+    {
+        fetch('api/users/')
+        .then(res => res.json())
+        .then(data => {
+            this.setState({userName: data.name, devices: data.devices});
+            this.loadDevices();
+        })
+        .catch(err => "error de catch " + err);
+    }
+
+
+    // al cargar la app 
+    componentDidMount()
+    {
+        //his.fetchTasks();
+        //this.pruebaApi();
+        this.loadUser();
+    }
+
+    prueba(param)
+    {
+       var html = "<div>";
+         html += "<button className=\"btn light-blue darken-4\" style={{margin: '2px'}}><i className=\"material-icons\">+</i></button>";
+         html += "<button>-</button>";
+         html += "<table className='striped'> <thead><tr><th>volt</th><th>watt</th><th>amper</th></tr></thead><tbody>";
+
+        fetch('/api/events/', {
             method: 'POST',
-            body: JSON.stringify(this.state),
+            body: JSON.stringify({eventsId: param}),
             headers: {
                 'Accept': 'application/json',
                 'Content-Type':'application/json'
@@ -43,185 +99,93 @@ class App extends Component {
         })
         .then(res => res.json())
         .then(data => {
+        this.setState({eventsArray: data});
+        data.forEach(function(element) {
+            console.log(element.v.volt);
+            html += "<tr>";
+            html += "<td>" + element.v.volt + "</td>";
+            html += "<td>" + element.v.watt + "</td>";
+            html += "<td>" + element.v.amper + "</td>";
+            html += "</tr>";
+          });
             console.log(data);
-            M.toast({html: 'Task Saved'});
-            this.setState({title: '', description: ''});
-            this.fetchTasks();
+
+        html += "</tbody></table></div>";
+        document.querySelector('#contenedor').innerHTML = html;
          })
         .catch(err => console.log(err));
-       }
-       this.fetchTasks();
-        e.preventDefault();
+        
+        
     }
-
-    // al cargar la app 
-    componentDidMount()
+    loadEvent(e)
     {
-        this.fetchTasks();
-        this.pruebaApi();
-    }
-
-    deleteTask(id){
-        if(confirm('are you sure you want to delit it?'))
+        if (e.user != 'default')
         {
-        fetch('api/tasks/' + id, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            M.toast({html: 'Task deleted'});
-            this.fetchTasks();
-        })
-        .catch(err => console.log("error de fetch " + err));
-    }
-    }
-
-    editTask(id)
-    {
-        
-        
-        fetch('api/tasks/' + id)
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            this.setState({
-                title: data.title,
-                description: data.description,
-                _id: data._id
-            });
-        })
-        .catch(err => "error de catch " + err);
+            this.prueba(e.e);
+        } else {
+            console.log('add');
+        }
         
     }
 
-    fetchTasks()
-    {
-        fetch('api/tasks')
-        .then(res => res.json())
-        .then(data => {
-            this.setState({tasks: data});
-            console.log(this.state.tasks);
-        })
-        .catch(err => console.log(err));
-    }
-
-    handleChange(e){
-        const {name, value} = e.target;
-        this.setState({
-            [name]:value
-        });
-    }
-
-    pruebaApi()
-    {
-        fetch('api/tasks/events')
-        .then(res => res.json())
-        .then(data => {
-            this.setState({events: data});
-        })
-        .catch(err => console.log(err));
-    }
-
+   
 
     render(){
         return (
-            <div>
+            <div id="principal">
+                
                 {/* navegacion */}
                 <nav className="light-blue darken-4">
-                    <div className="container">
-                        <a className="brand-logo" href="/">Energy View</a>
-                    </div>
-                    
-                    <button className="btn light-blue darken-4" style={{height: "60px"}}><i className="material-icons">account_circle</i></button>
-                    
+                <div className="nav-wrapper">
+                <a href="#!" className="brand-logo"><i className="material-icons">cloud</i>Logo</a>
+                <ul className="right hide-on-med-and-down">
+                    <li><a href="sass.html"><i className="material-icons">search</i></a></li>
+                    <li><a href="badges.html"><i className="material-icons">view_module</i></a></li>
+                    <li><a href="collapsible.html"><i className="material-icons">refresh</i></a></li>
+                    <li><a href="mobile.html"><i className="material-icons">more_vert</i></a></li>
+                </ul>
+                </div>
                 </nav>
 
                 {/* Principal */}
-                <div className="container">
+                <div >
 
                     <div className="row">
-
+ 
+                    
                         <div className="col s5">
-                            <div className="card">
-                                <div className="card-content">
-                                    <form onSubmit={this.addTask}>
-                                        <div className="row">
-                                            <div className="input-field col s12">
-                                                   <input name="title" value={this.state.title} onChange={this.handleChange} type="text" placeholder="titulo"/> 
-                                            </div>
-                                        </div>
-
-                                        <div className="row">
-                                            <div className="input-field col s12">
-                                                   <textarea name="description" value={this.state.description} onChange={this.handleChange} placeholder="descripcion" className="materialize-textarea"></textarea> 
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" className="btn light-blue darken-4" >SEND</button>  
-                                        <button className="btn light-blue darken-4" onClick={() => this.pruebaApi()}>EVENTS</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col s7">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
+                         
+                          
                                     {
-                                        this.state.tasks.map(tasks => {
+                                    
+                                        this.state.devicesArray.map(devicesArray => {
                                             return (
-                                                <tr key={tasks._id}>
-                                                    <td>{tasks.title}</td>
-                                                    <td>{tasks.description}</td>
-                                                    <td>
-                                                         <button className="btn light-blue darken-4" onClick={() => this.deleteTask(tasks._id)} style={{margin: '2px'}}><i className="material-icons">delete</i></button>
-                                                          <button className="btn light-blue darken-4" onClick={() => this.editTask(tasks._id)} style={{margin: '2px'}} ><i className="material-icons">edit</i></button>
-                                                    </td>
-                                                </tr>
+                                                <div className="row" key={devicesArray.e}>
+                                                  <div className="col s5 m5" onClick={() => this.loadEvent(devicesArray)}>
+                                                    <div className="card blue-grey darken-1">
+                                                            <div className="card-content white-text">
+                                                                    <span className="card-title">{devicesArray.name}</span>
+                                                                    <p>IMAGEN SENSOR POTENCIA</p>
+                                                            </div>
+                                                            <div className="card-action">
+                                                                    <a href="#">This is a link</a>
+                                                                    <a href="#">This is a link</a>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                              </div>
                                             )
                                         })
-                                    }
-                                </tbody>
-                            </table>
-                        </div> 
-
-                        <div className="col s7">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>volt</th>
-                                        <th>watt</th>
                                         
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        this.state.events.map(events => {
-                                            return (
-                                                <tr key={events._id}>
-                                                    <td>{events.v.volt}</td>
-                                                    <td>{events.v.watt}</td>
-                                                </tr>
-                                            )
-                                        })
                                     }
-                                </tbody>
-                            </table>
+                               
+                           
+                               <div id="contenedor" ></div>
                         </div> 
 
                     </div>
+
+                   
 
                 </div>
 
