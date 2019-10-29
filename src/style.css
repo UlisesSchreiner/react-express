@@ -1,0 +1,82 @@
+/*CSS*/
+.contenedor {/*propiedades que quieras*/
+    background-color:#0C0;
+    width:auto; /*width:300px;*/
+    height:auto;	
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+}
+
+#box1 {
+    /*background-color:#0C0;*/
+    border: 1px solid #ccc;
+    position:absolute;
+    top: 0px;
+    left:0px;
+    width: wrap; /*width:300px;*/
+    height:wrap;
+}   
+
+#box2 {
+    border: 1px solid #ccc;
+    position:absolute;/* position:absolute;	*/
+    top: 80px;
+    right:5px;
+    width:87%; /*width:90px;*/
+    height:325px;
+}
+
+#box3 {
+    border: 1px solid #ccc;
+    position:absolute;
+    bottom: 50px;
+    top: 420px;
+    right:745px;
+    width:859px;
+    height:520px;
+    overflow-y: scroll;
+}
+
+#box4 {
+    border: 1px solid #ccc;
+    position:absolute;
+    bottom: 50px;
+    top: 420px;
+    right: 5px;
+    width:735px;
+    height:520px;
+    overflow-y: scroll;
+}
+
+.hijo {
+    border: 1px solid #ccc;
+    width:395px;
+    height:50px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.hijo:hover {
+    border: 1px solid #ccc;
+    background-color: #ccc;
+    width:399px;
+    height:50px;
+}
+
+.hijo2 {
+    border: 1px solid #ccc;
+    width:635px;
+    height:10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.hijo2:hover {
+    border: 1px solid #ccc;
+    background-color: #ccc;
+    width:635px;
+    height:10px;
+    padding: 0px;
+    margin: 0px;
+}
