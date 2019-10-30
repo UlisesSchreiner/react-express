@@ -1,19 +1,11 @@
 const express = require('express');
 const morgan = require('morgan');
 
-const { mongoose } = require('./database');
 
 const app = express();
 
 // Settings 
-app.set('port', process.env.PORT || 3000);
-
-// midelwares 
-app.use(morgan('dev'));
-app.use(express.json());
-
-// routes
-app.use('/api/tasks',require('./routes/task.routes'));
+app.set('port', process.env.PORT || 4000);
 
 // Static files
 app.use(express.static(__dirname + '/public'));

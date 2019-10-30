@@ -1,0 +1,112 @@
+/*CSS*/
+
+#navLaeral {
+    
+    position:absolute;
+    top: 0px;
+    left:0px;
+    width: 15%; 
+    height:100%;
+}
+
+#contenidoPrincipal {
+    
+    position:absolute;
+    top: 0px;
+    right:0px;
+    width: 85%; 
+    height:100%;
+}
+
+#navVarraPrincipal {
+    
+    position:absolute;
+    top: 0px;
+    right:0px;
+    width: 100%; 
+    height:7%;
+}
+
+#visorUno {
+    
+    position:absolute;
+    top: 8%;
+    right:1%;
+    width: 98%; 
+    height:35%;
+    overflow-y: scroll;
+}
+
+#visorDos {
+    
+    position:absolute;
+    top: 44%;
+    right:51%;
+    width: 48%; 
+    height:55%;
+    overflow-y: scroll;
+}
+
+#visorTres {
+    
+    position:absolute;
+    top: 44%;
+    right:1%;
+    width: 49%; 
+    height:55%;
+    overflow-y: scroll;
+}
+
+
+/*
+.contenedor {
+    background-color:#0C0;
+    width:auto; 
+    height:auto;	
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+}
+
+#box1 {
+    
+    border: 1px solid #ccc;
+    position:absolute;
+    top: 0px;
+    left:0px;
+    width: wrap; 
+    height:wrap;
+}   
+
+#box2 {
+    border: 1px solid #ccc;
+    position:absolute;
+    top: 80px;
+    right:5px;
+    width:87%; 
+    height:325px;
+}
+
+#box3 {
+    border: 1px solid #ccc;
+    position:absolute;
+    bottom: 50px;
+    top: 420px;
+    right:745px;
+    width:859px;
+    height:520px;
+    overflow-y: scroll;
+}
+
+#box4 {
+    border: 1px solid #ccc;
+    position:absolute;
+    bottom: 50px;
+    top: 420px;
+    right: 5px;
+    width:735px;
+    height:520px;
+    overflow-y: scroll;
+}
+
+*/
