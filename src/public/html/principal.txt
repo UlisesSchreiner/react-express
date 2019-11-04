@@ -124,15 +124,20 @@
         </div>
 
         <div id="visorUno">
-        <center>visorUno</center>
+            <div id="navVisorUno"></div>
+            <div id="contenidoVisorUno">
+                <table id="tableVisorUno"></table>
+            </div>
         </div>
 
          <div id="visorDos">
         <center>visorDos</center>
+        <div id="contenidoVariablesVisorDos"></div>
         </div>
 
          <div id="visorTres">
         <center>visorTres</center>
+        <div id="contenidoVisorTres"></div>
         </div>
 
     </div>
