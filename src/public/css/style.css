@@ -54,17 +54,18 @@
     overflow-y: scroll;
 }
 
-#tableVisorUno {
-    height: 100%;
-    width: 100%;
+	
+#liCardDevices {
+  float: left;
+  margin: 8px;
+  list-style-type: none;
 }
 
-.TDcardDevice {
-    border: 1px solid #000;
-    height: 100px;
-    width: 100px;
-    position:absolute;
-    margin: 10px;
+#divCardDevice {
+    width: 150px; 
+    height: 150px;
+    background-color: #8295ed;
+    border-radius: 15px;
 }
 
 /* VISOR DOS */

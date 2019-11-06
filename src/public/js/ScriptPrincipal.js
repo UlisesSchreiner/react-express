@@ -1,26 +1,34 @@
 
 
-
+/** State of App */
 this.state = {
+    TimeFrom: Number,
+    TimeTo: Number,
     devices: [],
     actualDevice: Object,
     actualEvents: [],
     actualEventKey: Number
 }
 
+/*
+  Click Event Listener 
+*/
 document.addEventListener('click', function (e) {
 
-// listen for the clicks
+// Listener for the IDs
 switch (e.target.id)
-{
+{   
+    // show the devices list in visorUno
     case 'showDevices':
             LoadDevicesInVisorUno();
     break;
 
-    case 'cardDevice':
-            LoadDeviceInVisorDos(e.target.getAttribute('key'));
+    // show the device chose in visorDos
+    case 'divCardDevice':
+            LoadDeviceInVisorDos(e.target);
     break;
 
+    // show event list of one chose variable 
     case 'variableItemVisorDos':
         LoadEventsVisorTres(e.target.getAttribute('key'));
     break;
@@ -28,59 +36,117 @@ switch (e.target.id)
 
 });
 
+/**
+ * ths function load the first time parameters to search events
+ */
+function LoadFirstTimeParameters(params) {
+    let currentDate = new Date();
+    let to = Number(currentDate);
+    let from = to - (86400*1000);
 
+    this.state.TimeFrom = from;
+    this.state.TimeTo = to;
+
+}
+LoadFirstTimeParameters();
+
+/**
+ * This function would load the user device lsit in the visorUno
+ */
 function LoadDevicesInVisorUno()
 {
-    LoadDevices();
-   
+    APIarrayDevices().then(response => {
+        this.state.devices = response;
+        ShowDevicesVisorUno();
+    });
+        
 }
 
-function LoadDevices() {
-
-    var token = readCookie('token');
-
-
-    fetch('http://localhost:3000/device', {  
-        headers:{
-          'Content-Type': 'application/json',
-          'Authorization': token
-        }
-      }).then(res => res.json())
-      .then(dat => {
-            this.state.devices = dat;
-            console.log(this.state.devices);  
-            ShowDevicesVisorUno();
-        })
-      .catch(error => console.error('Error:', error));
-
-}
-
+/**
+ * this function get the devices array in te state and add the ADD device aacion
+ * then show these elements in the VisorUno
+ */
 function ShowDevicesVisorUno()
 {
-    var table = document.querySelector('#tableVisorUno');   
-    var array_length = this.state.devices.length;
+var contenidoVisorUno = document.querySelector('#contenidoVisorUno');
+var table = document.createElement('ul');
 
-    var row = table.insertRow(0);
+var objPlus = {type: 0}
+var arrObjDevices = this.state.devices.concat(objPlus);
 
-    let cont = 0;
-    this.state.devices.forEach(element => {
-        let div = document.createElement('div');
-        div.setAttribute('class', 'TDcardDevice');
-        div.innerText = 'hola';
+arrObjDevices.forEach(element => {
+
+    var li = document.createElement('li');
+    var div = document.createElement('div');
+    
+    // check if the element is ADD or normal types
+    if (!element._id){
+        // ADD element
+        var title = document.createElement('center');
+        title.innerText = "ADD";
+        div.appendChild(title);
+    } else {
+        // normal element 
         div.setAttribute('key', element._id);
-        div.setAttribute('id','cardDevice');
-        var cell1 = row.insertCell(0);
-        cell1.appendChild(div);
-       
-        cont++;
-    });
+    }   
+    
+    li.setAttribute('id', 'liCardDevices');
+    div.setAttribute('id', 'divCardDevice');
+    
 
+    li.appendChild(div);
+    table.appendChild(li);
+});
 
+contenidoVisorUno.appendChild(table);
 
 }
 
-function LoadDeviceInVisorDos(id) {
+/**
+ * this function is called when the user click in one device o ADD device action
+ * @param {} target 
+ */
+function LoadDeviceInVisorDos(target) {
 
+    var ObjectId = target.getAttribute('key');
+
+    // cheq if is a device o ADD device accion
+    if (ObjectId) {
+        // device
+        LoadDeviceinVisorDos(ObjectId);
+    } else {
+        // add
+        
+    }
+
+}
+
+
+/**
+ * thisfunction load the device selected in the visorDos
+ */
+function LoadDeviceinVisorDos(id) {
+
+    // Load the actual selected Object
+    this.state.actualDevice = this.state.devices.find(element => element._id == id);
+
+    // load the actual event list
+    LoadEvents(this.state.actualDevice.i);
+
+    
+}
+
+/**
+ * this function get the events array using the actual AppState time
+ * @param {} i 
+ */
+function LoadEvents(i) {
+APIarrayEvents(i, this.state.TimeFrom, this.state.TimeTo).then(response => {
+    console.log(response);
+    this.state.actualEvents = response;
+});
+}
+    /*
 let contenedor = document.querySelector('#contenidoVariablesVisorDos');
 contenedor.innerHTML = '';
 
@@ -112,8 +178,8 @@ fetch(url, {
     
     })
   .catch(error => console.error('Error:', error));
+*/
 
-}
 
 
 function LoadEventsVisorTres(eventName) {
@@ -141,19 +207,6 @@ fetch('http://localhost:3000/event/', {
   .then(dat => {
         this.state.actualEvents = dat;
 
-        /*
-        this.state.actualEvents.forEach(element => {
-            console.log(element);
-            var div = document.createElement('div');
-            div.innerText = element.v[eventName];
-            div.setAttribute('class', 'itemValueVisorTres');
-            div.setAttribute('id', 'idItemVisorTres');
-            div.setAttribute('key', eventName);
-            contenedor.appendChild(div);
-        }); 
-        
-    
-    */
    LoadEventsInVisorTres(dat, eventName, '°c');
     })
   .catch(error => console.error('Error:', error));
@@ -183,15 +236,3 @@ function LoadEventsInVisorTres(arrayDeEvents, eventKey, eventScale) {
     contenedor.appendChild(table);
 }
 
-function timeConverter(UNIX_timestamp){
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time = date + ' ' + month +  ' ' + hour + ':' + min + ':' + sec ;
-    return time;
-  }

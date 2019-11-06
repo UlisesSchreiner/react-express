@@ -126,7 +126,7 @@
         <div id="visorUno">
             <div id="navVisorUno"></div>
             <div id="contenidoVisorUno">
-                <table id="tableVisorUno"></table>
+              
             </div>
         </div>
 
