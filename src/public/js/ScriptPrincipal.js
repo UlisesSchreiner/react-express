@@ -30,7 +30,7 @@ switch (e.target.id)
 
     // show event list of one chose variable 
     case 'variableItemVisorDos':
-        LoadEventsVisorTres(e.target.getAttribute('key'));
+        LoadEventsVisorTres(e.target);
     break;
 }
 
@@ -133,7 +133,8 @@ function LoadDeviceinVisorDos(id) {
     // load the actual event list
     LoadEvents(this.state.actualDevice.i);
 
-    
+    // load the view variables in visorDos
+    LoadVariablesItemVisorDos();
 }
 
 /**
@@ -146,82 +147,48 @@ APIarrayEvents(i, this.state.TimeFrom, this.state.TimeTo).then(response => {
     this.state.actualEvents = response;
 });
 }
-    /*
-let contenedor = document.querySelector('#contenidoVariablesVisorDos');
-contenedor.innerHTML = '';
+    
 
-var token = readCookie('token');
-
-var url = 'http://localhost:3000/device/' + id; 
-
-fetch(url, {  
-    headers:{
-      'Content-Type': 'application/json',
-      'Authorization': token
-    }
-  }).then(res => res.json())
-  .then(dat => {
-        this.state.actualDevice = dat;
-        this.state.actualEventKey = dat.events;
-
-        this.state.actualDevice.view.forEach(element => {
-            var div = document.createElement('div');
-            div.innerText = element.name;
-            div.setAttribute('class', 'variableItem');
-            div.setAttribute('id', 'variableItemVisorDos');
-            div.setAttribute('key', element.events);
-            contenedor.appendChild(div);
-            console.log(element);
-        }); 
+ function LoadVariablesItemVisorDos() {
+    let contenedorVariables = document.querySelector('#contenidoVariablesVisorDos');
+    contenedorVariables.innerHTML = "";
+    this.state.actualDevice.view.forEach(function (params) {
         
-    
-    
-    })
-  .catch(error => console.error('Error:', error));
-*/
+        var div = document.createElement('div');
+        div.setAttribute('class', 'ItemVariableVisorTres');
+        var h3 = document.createElement('h3');
+        h3.innerText = params.name;
+        h3.setAttribute('id', 'variableItemVisorDos');
+        h3.setAttribute('key', params.events);
+        h3.setAttribute('unit', params.unit);
+        div.appendChild(h3);
+        contenedorVariables.appendChild(div);
+    }); 
+ }
 
+function LoadEventsVisorTres(target) {
+   console.log(target.getAttribute('key'));
 
+   LoadEventsInVisorTres(target.getAttribute('key'), target.getAttribute('unit'));
 
-function LoadEventsVisorTres(eventName) {
-console.log("estaria buscando ");
-console.log(eventName);
-console.log("en " + this.state.actualEventKey);
-
-var token = readCookie('token');
-
-var contenedor = document.querySelector('#contenidoVisorTres');
-contenedor.innerHTML = "";
-
-fetch('http://localhost:3000/event/', {
-    method: 'POST',
-    body: JSON.stringify({
-        "i":9862124,
-        "from":1569129164539,
-        "to":1569129404670
-    }),  
-    headers:{
-      'Content-Type': 'application/json',
-      'Authorization': token
-    }
-  }).then(res => res.json())
-  .then(dat => {
-        this.state.actualEvents = dat;
-
-   LoadEventsInVisorTres(dat, eventName, '°c');
-    })
-  .catch(error => console.error('Error:', error));
-
+   console.log("evemts");
+   console.log(this.state.actualEvents);
+   
+   APIarrayEvents(9862124, 1573093574220, 1573094054523).then(response => { /////////// TODO chequiar por que no coinside time stump de evento en db y time de web. 
+    console.log(response);
+    this.state.actualEvents = response;
+});
 }
 
 
-function LoadEventsInVisorTres(arrayDeEvents, eventKey, eventScale) {
+function LoadEventsInVisorTres(eventKey, eventScale) {
 
     var contenedor = document.querySelector('#contenidoVisorTres');
     contenedor.innerHTML = "";
 
     var table = document.createElement('table');
         table.setAttribute('class', 'table table-striped');
-    arrayDeEvents.forEach(function (evnt) {
+    this.state.actualEvents.forEach(function (evnt) {
         var row = table.insertRow(0);
 
         var cell1 = row.insertCell(0);

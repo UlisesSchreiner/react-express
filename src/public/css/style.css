@@ -101,6 +101,15 @@
     background-color: #e0e4f6;
 }
 
+
+.ItemVariableVisorTres {
+    border: 1px solid lightblue;
+}
+
+.ItemVariableVisorTres:hover {
+    background-color: lightgrey;
+}
+
 /* VISOR TRES */
 
 #visorTres {
