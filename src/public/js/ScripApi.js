@@ -38,3 +38,13 @@ function APIarrayEvents(i, from, to){
       })
       .catch(error => console.warn(error));
     }
+
+
+    /**
+     * this function create a new device
+     */
+    function APIcreateNewDeice(events, password, dispositivo) {
+        console.log(events);
+        console.log(password);
+        console.log(dispositivo);
+    }

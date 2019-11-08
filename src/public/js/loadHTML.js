@@ -66,7 +66,29 @@ function BotonLogeo() {
 
 
 function BotonLiveDemo() {
-    console.log("liveDemo");
+    var password = "contraseña";
+    var email = "info@energytec.com.ar";
+    console.log(email + password);
+
+    fetch('http://localhost:3000/auth/login', {
+        method: 'POST', 
+        body: JSON.stringify({
+            mail:email,
+            password:password
+        }), 
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      .then(dat => {
+          if (!dat.token) return console.log("falla de autentificacion");
+          
+            // guardar la cookie 
+            document.cookie = "token=Bearer " + encodeURIComponent( dat.token );
+            LoadPrincipal();
+           
+        })
+      .catch(error => console.error('Error:', error));
 }
 
 function Recordarme() {

@@ -46,7 +46,7 @@ function LoadFirstTimeParameters(params) {
 
     this.state.TimeFrom = from;
     this.state.TimeTo = to;
-
+    console.log(from + " " + to);
 }
 LoadFirstTimeParameters();
 
@@ -116,6 +116,7 @@ function LoadDeviceInVisorDos(target) {
         LoadDeviceinVisorDos(ObjectId);
     } else {
         // add
+        ShowAddDeviceScreen();
         
     }
 
@@ -129,9 +130,9 @@ function LoadDeviceinVisorDos(id) {
 
     // Load the actual selected Object
     this.state.actualDevice = this.state.devices.find(element => element._id == id);
-
+    
     // load the actual event list
-    LoadEvents(this.state.actualDevice.i);
+    LoadEvents(this.state.actualDevice.events);
 
     // load the view variables in visorDos
     LoadVariablesItemVisorDos();
@@ -142,16 +143,21 @@ function LoadDeviceinVisorDos(id) {
  * @param {} i 
  */
 function LoadEvents(i) {
-APIarrayEvents(i, this.state.TimeFrom, this.state.TimeTo).then(response => {
-    console.log(response);
-    this.state.actualEvents = response;
-});
+    console.log("loadEvents");
+    console.log(i);
+    APIarrayEvents(Number(i), this.state.TimeFrom, this.state.TimeTo).then(response => {
+        console.log(response);
+        this.state.actualEvents = response;
+    });
 }
     
 
  function LoadVariablesItemVisorDos() {
-    let contenedorVariables = document.querySelector('#contenidoVariablesVisorDos');
-    contenedorVariables.innerHTML = "";
+     let contenedor = document.querySelector('#visorDos');
+     contenedor.innerHTML = "";
+     let contenedorVariables = document.createElement('div');
+     contenedorVariables.innerHTML = "";
+     contenedorVariables.setAttribute('id', 'contenidoVariablesVisorDos');
     this.state.actualDevice.view.forEach(function (params) {
         
         var div = document.createElement('div');
@@ -163,21 +169,15 @@ APIarrayEvents(i, this.state.TimeFrom, this.state.TimeTo).then(response => {
         h3.setAttribute('unit', params.unit);
         div.appendChild(h3);
         contenedorVariables.appendChild(div);
-    }); 
+    });
+    contenedor.appendChild(contenedorVariables); 
  }
 
 function LoadEventsVisorTres(target) {
-   console.log(target.getAttribute('key'));
-
+    console.log("loasEventsVisorTres");
+    console.log(this.state.actualEvents);
    LoadEventsInVisorTres(target.getAttribute('key'), target.getAttribute('unit'));
 
-   console.log("evemts");
-   console.log(this.state.actualEvents);
-   
-   APIarrayEvents(9862124, 1573093574220, 1573094054523).then(response => { /////////// TODO chequiar por que no coinside time stump de evento en db y time de web. 
-    console.log(response);
-    this.state.actualEvents = response;
-});
 }
 
 
@@ -203,3 +203,107 @@ function LoadEventsInVisorTres(eventKey, eventScale) {
     contenedor.appendChild(table);
 }
 
+function ShowAddDeviceScreen()
+{
+    document.querySelector('#visorDos').innerHTML = "";
+
+    let div = document.createElement('div');
+    let center = document.createElement('center');
+    let br = document.createElement('br');
+    let form = document.createElement('form');
+    let input = document.createElement('input');
+    let input2 = document.createElement('input');
+    let select = document.createElement('select');
+    let option1 = document.createElement('option');
+    let option2 = document.createElement('option');
+    let option3 = document.createElement('option');
+    let button1 = document.createElement('button');
+    let button2 = document.createElement('button');
+
+    div.setAttribute('id', 'contenedorNewDevice');
+    center.innerText = 'ADD NEW DEVICE';
+    div.appendChild(center);
+    div.appendChild(br);
+    
+    input.setAttribute('type', 'text');
+    input.setAttribute('placeholder', 'Device ID');
+    input.setAttribute('id', 'inputNewDeviceID');
+    form.appendChild(input);
+    form.appendChild(document.createElement('br'));
+    input2.setAttribute('type', 'text');
+    input2.setAttribute('placeholder', 'Device Password');
+    input2.setAttribute('id', 'inputNewDevicePass');
+    form.appendChild(input2);
+
+    option1.setAttribute('key', '1');
+    option1.innerText = 'Termotanque Solar';
+    select.appendChild(option1);
+    option2.setAttribute('key', '2');
+    option2.innerText = 'Temperatura & Humedad';
+    select.appendChild(option2);
+    option3.setAttribute('key', '3');
+    option3.innerText = 'Power Meeter';
+    select.appendChild(option3);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(select);
+
+    button1.setAttribute('type', 'button');
+    button1.setAttribute('id', 'btnNewDeviceAceptar');
+    button1.innerText = 'ACEPTAR';
+    button2.setAttribute('type', 'button');
+    button2.setAttribute('id', 'btnNewDeviceCancelar');
+    button2.innerText = 'CANCELAR';
+
+    form.appendChild(document.createElement('br'));
+    form.appendChild(document.createElement('br'));
+
+    form.appendChild(button1);
+    form.appendChild(button2);
+
+    div.appendChild(form);
+
+    document.querySelector('#visorDos').appendChild(div);
+
+    div.addEventListener('click', function (e) {
+        switch (e.target.id)
+        {
+            case 'btnNewDeviceAceptar':
+                CreateNewDevice();
+            break;
+
+            case 'btnNewDeviceCancelar':
+            break;
+
+        }
+    });
+
+   function CreateNewDevice()
+   {
+       let events = Number(input.value);
+       let password = input2.value;
+       let dispositivo = select.value;
+    APIcreateNewDeice(events, password, dispositivo);
+   }
+
+}
+
+
+/**
+ *   <div id="contenedorNewDevice">
+         <center>ADD NEW DEVICE</center>
+            <br/><br/>
+             <form>
+                <input type="text" placeholder="Device ID"><br>
+                <input type="text" placeholder="Device Password"><br>
+                 <select>
+                    <option key="1">Termotanque Solar</option>
+                    <option key="2">Temperatura & Humedad</option>
+                    <option key="3">Power Meeter</option>
+                </select> 
+                <br/><br/>
+                 <button type="button" id="btnNewDeviceAceptar">ACEPTAR</button><br/>
+                  <button type="button" id="btnNewDeviceCancelar">CANCELAR</button>  
+             </form> 
+
+    </div>
+ */

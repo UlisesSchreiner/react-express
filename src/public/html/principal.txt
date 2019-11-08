@@ -131,8 +131,6 @@
         </div>
 
          <div id="visorDos">
-        <center>visorDos</center>
-        <div id="contenidoVariablesVisorDos"></div>
         </div>
 
          <div id="visorTres">
