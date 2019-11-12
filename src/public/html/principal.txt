@@ -1,6 +1,6 @@
 <div id="principalDshb">
 
-    <div id="navLaeral">
+    <div id="navLaeral" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -134,11 +134,9 @@
         </div>
 
          <div id="visorTres">
-        <center>visorTres</center>
-        <div id="contenidoVisorTres"></div>
+        
         </div>
 
     </div>
 
 </div>
-<script src="js/ScriptPrincipal.js"></script>

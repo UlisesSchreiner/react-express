@@ -1,5 +1,3 @@
-
-
 /** State of App */
 this.state = {
     TimeFrom: Number,
@@ -25,6 +23,14 @@ switch (e.target.id)
 
     // show the device chose in visorDos
     case 'divCardDevice':
+            LoadDeviceInVisorDos(e.target);
+    break;
+// show the device chose in visorDos
+    case 'imgDeviceType':
+            LoadDeviceInVisorDos(e.target);
+    break;
+// show the device chose in visorDos
+    case 'titleDeviceType':
             LoadDeviceInVisorDos(e.target);
     break;
 
@@ -56,7 +62,7 @@ LoadFirstTimeParameters();
 function LoadDevicesInVisorUno()
 {
     APIarrayDevices().then(response => {
-        this.state.devices = response;
+        this.state.devices = response;    
         ShowDevicesVisorUno();
     });
         
@@ -69,6 +75,7 @@ function LoadDevicesInVisorUno()
 function ShowDevicesVisorUno()
 {
 var contenidoVisorUno = document.querySelector('#contenidoVisorUno');
+    contenidoVisorUno.innerHTML = "";
 var table = document.createElement('ul');
 
 var objPlus = {type: 0}
@@ -78,20 +85,43 @@ arrObjDevices.forEach(element => {
 
     var li = document.createElement('li');
     var div = document.createElement('div');
-    
+    let img = document.createElement('img');
+    var title = document.createElement('center');
+    img.setAttribute('id', 'imgDeviceType');
+    title.setAttribute('id', 'titleDeviceType');
     // check if the element is ADD or normal types
     if (!element._id){
         // ADD element
-        var title = document.createElement('center');
+       
         title.innerText = "ADD";
-        div.appendChild(title);
+        img.setAttribute('src', '/images/plus.png');
     } else {
         // normal element 
         div.setAttribute('key', element._id);
+        img.setAttribute('key', element._id);
+        title.setAttribute('key', element._id);
+        APIlastEvent(element.events).then(dat => {
+            if(dat){
+                title.innerText = dat.v['Nombre'];
+                switch (dat.v['Dispositivo'])
+                {
+                    case 3: img.setAttribute('src', '/images/power.png');
+                    break;
+                    default: img.setAttribute('src', '/images/error.png');
+
+                } 
+                
+            } else {
+                img.setAttribute('src', '/images/information2.png');
+                title.innerText = 'Never Report';
+            }
+        });
     }   
-    
+    div.appendChild(title);
+    div.appendChild(img);
     li.setAttribute('id', 'liCardDevices');
     div.setAttribute('id', 'divCardDevice');
+    
     
 
     li.appendChild(div);
@@ -128,6 +158,10 @@ function LoadDeviceInVisorDos(target) {
  */
 function LoadDeviceinVisorDos(id) {
 
+    // limpiamos el visor dos
+    let contenedor = document.querySelector('#visorDos');
+    contenedor.innerHTML = "";
+
     // Load the actual selected Object
     this.state.actualDevice = this.state.devices.find(element => element._id == id);
     
@@ -136,6 +170,29 @@ function LoadDeviceinVisorDos(id) {
 
     // load the view variables in visorDos
     LoadVariablesItemVisorDos();
+
+
+    // generate new buttons
+    let btn = document.createElement('a');
+    //btn.innerText = 'DELETE';
+    btn.setAttribute('class', 'btn btn-danger btn-circle btn-lg');
+    btn.setAttribute('id', 'btnDeleteVisorDos');
+    let i = document.createElement('i');
+    i.setAttribute('class', 'fas fa-trash');
+    btn.appendChild(i);
+
+    contenedor.appendChild(btn);
+    let objectId = this.state.actualDevice._id;
+    btn.addEventListener('click', function (params) {
+        if (confirm('Esta seguro de eliminar el dispositivo?')){
+            APIdeleteDevice(objectId).then(dat => {
+                console.log(dat);
+                LoadDevicesInVisorUno();
+            })
+            .catch(err => console.log(err));
+        }
+        
+    });
 }
 
 /**
@@ -154,7 +211,6 @@ function LoadEvents(i) {
 
  function LoadVariablesItemVisorDos() {
      let contenedor = document.querySelector('#visorDos');
-     contenedor.innerHTML = "";
      let contenedorVariables = document.createElement('div');
      contenedorVariables.innerHTML = "";
      contenedorVariables.setAttribute('id', 'contenidoVariablesVisorDos');
@@ -182,9 +238,11 @@ function LoadEventsVisorTres(target) {
 
 
 function LoadEventsInVisorTres(eventKey, eventScale) {
-
-    var contenedor = document.querySelector('#contenidoVisorTres');
-    contenedor.innerHTML = "";
+    
+    document.querySelector('#visorTres').innerHTML = "";
+    var contenedor = document.createElement('div');
+        contenedor.setAttribute('id', 'contenidoVisorTres');
+    
 
     var table = document.createElement('table');
         table.setAttribute('class', 'table table-striped');
@@ -201,6 +259,7 @@ function LoadEventsInVisorTres(eventKey, eventScale) {
     });
 
     contenedor.appendChild(table);
+    document.querySelector('#visorTres').appendChild(contenedor);
 }
 
 function ShowAddDeviceScreen()
@@ -281,29 +340,10 @@ function ShowAddDeviceScreen()
    {
        let events = Number(input.value);
        let password = input2.value;
-       let dispositivo = select.value;
-    APIcreateNewDeice(events, password, dispositivo);
+       let dispositivo = select.selectedIndex + 1;
+    
+    APIcreateNewDeice(events, password, dispositivo).then(LoadDevicesInVisorUno());
    }
 
 }
 
-
-/**
- *   <div id="contenedorNewDevice">
-         <center>ADD NEW DEVICE</center>
-            <br/><br/>
-             <form>
-                <input type="text" placeholder="Device ID"><br>
-                <input type="text" placeholder="Device Password"><br>
-                 <select>
-                    <option key="1">Termotanque Solar</option>
-                    <option key="2">Temperatura & Humedad</option>
-                    <option key="3">Power Meeter</option>
-                </select> 
-                <br/><br/>
-                 <button type="button" id="btnNewDeviceAceptar">ACEPTAR</button><br/>
-                  <button type="button" id="btnNewDeviceCancelar">CANCELAR</button>  
-             </form> 
-
-    </div>
- */
