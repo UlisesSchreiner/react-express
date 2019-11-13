@@ -1,6 +1,5 @@
-<div id="principalDshb">
+<div id="wrapper">
 
-    <div id="navLaeral" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -115,15 +114,19 @@
 
         </ul>
         <!-- End of Sidebar -->
-    </div>
+    
 
-    <div id="contenidoPrincipal">
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <div id="content">
+        
+        <div class="container-fluid">
 
         <div id="navVarraPrincipal">
         <center>navar</center>
         </div>
 
-        <div id="visorUno">
+        <div id="visorUno" class="row">
             <div id="navVisorUno"></div>
             <div id="contenidoVisorUno">
               
@@ -136,6 +139,10 @@
          <div id="visorTres">
         
         </div>
+
+      </div>
+
+      </div>
 
     </div>
 

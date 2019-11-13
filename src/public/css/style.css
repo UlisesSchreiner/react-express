@@ -1,22 +1,5 @@
 /*CSS*/
 
-#navLaeral {
-    
-    position:absolute;
-    top: 0px;
-    left:0px;
-    width: 13%; 
-    height:100%;
-}
-
-#contenidoPrincipal {
-    
-    position:absolute;
-    top: 0px;
-    right:0px;
-    width: 87%; 
-    height:100%;
-}
 
 #navVarraPrincipal {
     
@@ -30,7 +13,7 @@
 /* VISOR UNO*/
 #visorUno {
     border: 1px solid #000;
-    position:absolute;
+    
     top: 8%;
     right:1%;
     width: 98%; 
@@ -92,7 +75,7 @@
     position:absolute;
     top: 44%;
     right:61%;
-    width: 38%; 
+    width: 10%; 
     height:55%;
     
 }
