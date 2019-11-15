@@ -174,14 +174,16 @@ function LoadDeviceinVisorDos(id) {
 
     // generate new buttons
     let btn = document.createElement('a');
+    let divBtn = document.createElement('div');
     //btn.innerText = 'DELETE';
     btn.setAttribute('class', 'btn btn-danger btn-circle btn-lg');
-    btn.setAttribute('id', 'btnDeleteVisorDos');
+    divBtn.setAttribute('id', 'btnDeleteVisorDos');
+    divBtn.appendChild(btn);
     let i = document.createElement('i');
     i.setAttribute('class', 'fas fa-trash');
     btn.appendChild(i);
 
-    contenedor.appendChild(btn);
+    contenedor.appendChild(divBtn);
     let objectId = this.state.actualDevice._id;
     btn.addEventListener('click', function (params) {
         if (confirm('Esta seguro de eliminar el dispositivo?')){
@@ -218,12 +220,15 @@ function LoadEvents(i) {
         
         var div = document.createElement('div');
         div.setAttribute('class', 'ItemVariableVisorTres');
-        var h3 = document.createElement('h3');
-        h3.innerText = params.name;
-        h3.setAttribute('id', 'variableItemVisorDos');
-        h3.setAttribute('key', params.events);
-        h3.setAttribute('unit', params.unit);
-        div.appendChild(h3);
+        let circulo = document.createElement('a');
+         circulo.setAttribute('class', 'btn btn-info btn-circle');
+        div.appendChild(circulo);
+        var title = document.createElement('center');
+        title.innerText = params.name;
+        title.setAttribute('id', 'variableItemVisorDos');
+        title.setAttribute('key', params.events);
+        title.setAttribute('unit', params.unit);
+        div.appendChild(title);
         contenedorVariables.appendChild(div);
     });
     contenedor.appendChild(contenedorVariables); 

@@ -41,8 +41,7 @@ let peticion = new XMLHttpRequest();
 function BotonLogeo() {
     var password = document.querySelector('#InputPassword').value;
     var email = document.querySelector('#InputEmail').value;
-    console.log(email + password);
-
+    
     fetch('http://localhost:3000/auth/login', {
         method: 'POST', 
         body: JSON.stringify({
@@ -52,16 +51,18 @@ function BotonLogeo() {
         headers:{
           'Content-Type': 'application/json'
         }
-      }).then(res => res.json())
-      .then(dat => {
-          if (!dat.token) return console.log("falla de autentificacion");
-          
-            // guardar la cookie 
-            document.cookie = "token=Bearer " + encodeURIComponent( dat.token );
-            LoadPrincipal();
-           
-        })
-      .catch(error => console.error('Error:', error));
+      }).then(function(response) {
+        if (response.status === 200) {
+             response.json().then(dat => {
+                document.cookie = "token=Bearer " + encodeURIComponent( dat.token );
+                LoadPrincipal(); 
+                });
+        } else if (response.status === 204){
+            toastr["error"]("Usuario o Contraseña incorrectos", "Error");
+        } else if (response.status === 401){
+            toastr["error"]("Cuenta desactivada, Active su cuenta", "Error");
+        }
+      }).catch(err => {console.log(err)});
 }
 
 
