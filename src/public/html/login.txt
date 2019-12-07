@@ -34,11 +34,11 @@
                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
                     </div>
-                    <a class="btn btn-primary btn-user btn-block" id="login">
+                    <a href="" class="btn btn-primary btn-user btn-block" id="login">
                       Login
                     </a>
                     </br>
-                    <a class="btn btn-primary btn-user btn-block" id="liveDemo">
+                    <a href="" class="btn btn-primary btn-user btn-block" id="liveDemo">
                       Live Demo
                     </a>
                   <div class="text-center">
@@ -46,7 +46,7 @@
                     <a class="small">Forgot Password?</a>
                   </div>
                   <div class="text-center">
-                    <a class="small" id="createAcount">Create an Account!</a>
+                    <a href="" class="small" id="createAcount">Create an Account!</a>
                   </div>
                 </div>
               </div>

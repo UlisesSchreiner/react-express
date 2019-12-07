@@ -5,9 +5,12 @@ this.state = {
     devices: [],
     actualDevice: Object,
     actualEvents: [],
-    actualEventKey: Number
+    actualEventKey: Number,
+    actualStateListChart: Boolean,
+    actualVariablesUnit: String,
+    actualVariablesKey: String
 }
-
+this.state.actualStateListChart = true;
 /*
   Click Event Listener 
 */
@@ -38,9 +41,38 @@ switch (e.target.id)
     case 'variableItemVisorDos':
         LoadEventsVisorTres(e.target);
     break;
+
+    case 'buttonChart':
+        ChangeStateListChart(e.target);
+        ChangeViewMode();
+    break;
+    
+    case 'buttonList':
+            ChangeStateListChart(e.target);
+            ChangeViewMode();
+    break;
+    case 'buttonBack':
+            ButtonBack();
+    break;
+        
+    case 'buttonNext':
+            ButtonNext();
+    break;
+
+    case 'LogOutButton':
+            LogOut();
+    break;
+    case 'settingsButton':
+            SettingsButton(e);       
+        break;
 }
 
 });
+
+function LogOut(params) {
+    ClearVariables();
+    LoadLoginScreen();
+}
 
 /**
  * ths function load the first time parameters to search events
@@ -56,16 +88,70 @@ function LoadFirstTimeParameters(params) {
 }
 LoadFirstTimeParameters();
 
+function ButtonBack()
+{
+    let from = this.state.TimeFrom;
+    let to = this.state.TimeTo;
+    
+    let nFrom = from - (86400*1000);
+    let nTo = to - (86400*1000);
+    
+    this.state.TimeFrom = nFrom;
+    this.state.TimeTo = nTo;
+    console.log(this.state.TimeFrom + " " + this.state.TimeTo);
+    // load the actual event list
+    LoadEvents(this.state.actualDevice.events);
+    
+}
+
+function ButtonNext()
+{
+    let from = this.state.TimeFrom;
+    let to = this.state.TimeTo;
+    
+    let nFrom = from + (86400*1000);
+    let nTo = to + (86400*1000);
+    
+    this.state.TimeFrom = nFrom;
+    this.state.TimeTo = nTo;
+    console.log(this.state.TimeFrom + " " + this.state.TimeTo);
+    // load the actual event list
+    LoadEvents(this.state.actualDevice.events);
+    ChangeViewMode();
+}
+
+
 /**
  * This function would load the user device lsit in the visorUno
  */
 function LoadDevicesInVisorUno()
 {
+    LoadScreen01();
     APIarrayDevices().then(response => {
         this.state.devices = response;    
         ShowDevicesVisorUno();
     });
         
+}
+
+/**
+ * 
+ * this function change the status of the chart or list view
+ */
+function ChangeStateListChart(target) {
+    if (target.id == 'buttonChart'){
+        this.state.actualStateListChart = true;
+    } else if (target.id == 'buttonList') {
+        this.state.actualStateListChart = false;
+    }
+}
+
+/**
+ * this function change the view mode of the variables visor tres
+ */
+function ChangeViewMode()
+{
+    LoadEventsInVisorTres(this.status.actualVariablesKey, this.status.actualVariablesUnit);
 }
 
 /**
@@ -107,6 +193,10 @@ arrObjDevices.forEach(element => {
                 {
                     case 3: img.setAttribute('src', '/images/power.png');
                     break;
+                    case 2: img.setAttribute('src', '/images/tempandhummidity.png');
+                    break;
+                    case 1: img.setAttribute('src', '/images/termotanque.png');
+                    break;
                     default: img.setAttribute('src', '/images/error.png');
 
                 } 
@@ -137,6 +227,8 @@ contenidoVisorUno.appendChild(table);
  * @param {} target 
  */
 function LoadDeviceInVisorDos(target) {
+
+    LoadScreen02(); 
 
     var ObjectId = target.getAttribute('key');
 
@@ -207,6 +299,7 @@ function LoadEvents(i) {
     APIarrayEvents(Number(i), this.state.TimeFrom, this.state.TimeTo).then(response => {
         console.log(response);
         this.state.actualEvents = response;
+        ChangeViewMode();
     });
 }
     
@@ -235,36 +328,113 @@ function LoadEvents(i) {
  }
 
 function LoadEventsVisorTres(target) {
-    console.log("loasEventsVisorTres");
-    console.log(this.state.actualEvents);
+    LoadScreen03();
+    
    LoadEventsInVisorTres(target.getAttribute('key'), target.getAttribute('unit'));
-
+   this.state.actualVariablesKey = target.getAttribute('key');
+   this.state.actualVariablesUnit = target.getAttribute('unit');
 }
+
 
 
 function LoadEventsInVisorTres(eventKey, eventScale) {
     
+    if (eventKey == null || eventScale == null)
+    {
+        eventKey = this.state.actualVariablesKey;
+        eventScale = this.status.actualVariablesUnit;
+        console.log(eventKey + " * " + eventScale);
+    }
+
     document.querySelector('#visorTres').innerHTML = "";
-    var contenedor = document.createElement('div');
-        contenedor.setAttribute('id', 'contenidoVisorTres');
+
+    let contenedorTools = document.createElement('div');
+        contenedorTools.setAttribute('id', 'contenidorToolsVisorTres');
+
+    let buttonChart = document.createElement('button');
+    let buttonList = document.createElement('button');
+    let buttonBack = document.createElement('button');
+    let buttonNext = document.createElement('button');
+    let dateString = document.createElement('div');
+
+    dateString.setAttribute('id', 'dateString');
+    buttonNext.setAttribute('class', 'btn btn-outline-info');
+    buttonBack.setAttribute('class', 'btn btn-outline-info'); 
+    buttonChart.setAttribute('class', 'btn btn-primary');
+    buttonList.setAttribute('class', 'btn btn-primary');
+    buttonBack.setAttribute('id', 'buttonBack');
+    buttonNext.setAttribute('id', 'buttonNext'); // TODO add id listener
+    buttonChart.setAttribute('id', 'buttonChart');
+    buttonList.setAttribute('id', 'buttonList');
+
     
 
-    var table = document.createElement('table');
-        table.setAttribute('class', 'table table-striped');
+    dateString.innerText = timeConverter(this.state.TimeFrom) + " - " + timeConverter(this.state.TimeTo);
+    buttonNext.innerText = "Next";
+    buttonBack.innerText = "Back";
+    buttonChart.innerText = "Charts";
+    buttonList.innerText = "List";
+
+    contenedorTools.appendChild(buttonBack);
+    contenedorTools.appendChild(buttonNext);
+    contenedorTools.appendChild(buttonList);
+    contenedorTools.appendChild(buttonChart);
+    contenedorTools.appendChild(dateString);
+    
+        
+        if (this.state.actualStateListChart == false){
+            var contenedorVariables = document.createElement('div');
+        contenedorVariables.setAttribute('id', 'contenidoVisorTres');
+        contenedorVariables.appendChild(CreateVariablesTable(eventKey, eventScale));
+        console.log("*" + eventKey + " * " + eventScale);
+        contenedorTools.appendChild(contenedorVariables);
+        } else {
+            let divCanvas = document.createElement('div');
+                divCanvas.setAttribute('id', 'divCanvas');
+            let canvas = document.createElement('canvas');
+                canvas.setAttribute('id', 'canvasVisorTres');
+                canvas.setAttribute('class', 'chartjs-render-monitor');
+                
+            divCanvas.appendChild(canvas);
+            contenedorTools.appendChild(divCanvas);
+            console.log("*" + eventKey + " * " + eventScale);
+            CreateVariablesChart(canvas, eventKey, eventScale);
+        }
+    
+    document.querySelector('#visorTres').appendChild(contenedorTools);
+}
+
+
+function CreateVariablesChart(objectHtml, eventKey, eventScale) {
+
+    let lavelsArray = [];
+    let valuesArray = [];
+
     this.state.actualEvents.forEach(function (evnt) {
-        var row = table.insertRow(0);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-        cell1.innerText = timeConverter(evnt.t);
-        cell2.innerText = evnt.v[eventKey];
-        cell3.innerText = eventScale;
+        if (evnt.v[eventKey] != -1 && evnt.v[eventKey] != -130 && evnt.v[eventKey] != 0){
+        lavelsArray.push(timeConverterShort(evnt.t));
+        valuesArray.push(evnt.v[eventKey]);
+        }
     });
 
-    contenedor.appendChild(table);
-    document.querySelector('#visorTres').appendChild(contenedor);
+    CreateLinealChart(objectHtml, lavelsArray, valuesArray, eventScale);
+}
+
+function CreateVariablesTable(eventKey, eventScale) {
+    var table = document.createElement('table');
+    table.setAttribute('class', 'table table-striped');
+this.state.actualEvents.forEach(function (evnt) {
+    var row = table.insertRow(0);
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+
+    cell1.innerText = timeConverter(evnt.t);
+    cell2.innerText = evnt.v[eventKey];
+    cell3.innerText = eventScale;
+});
+return table;
 }
 
 function ShowAddDeviceScreen()

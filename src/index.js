@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const app = express();
 
 // Settings 
-app.set('port', process.env.PORT || 4000);
+app.set('port', 80);
 
 // Static files
 app.use(express.static(__dirname + '/public'));

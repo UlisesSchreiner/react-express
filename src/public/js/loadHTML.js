@@ -1,48 +1,72 @@
 
 
 // load login html
-let peticion = new XMLHttpRequest();
-        peticion.open("get", "html/login.txt");
-        peticion.send();
-        peticion.addEventListener("load", ()=> {
+function LoadLoginScreen() {
+    // clear token 
+    document.cookie = "token=Bearer " + encodeURIComponent( "" );
 
-           
-           document.querySelector("#contenedorPrincipal").innerHTML = peticion.response;
-              
-        // listen for click events
-        document.addEventListener('click', function(e) {
-            
+    let peticion = new XMLHttpRequest();
+    peticion.open("get", "html/login.txt");
+    peticion.send();
+    peticion.addEventListener("load", ()=> {
 
-            switch (e.target.id)
-            {
-                case 'login':
-                        BotonLogeo();
-                    break;
+        document.querySelector("#contenedorPrincipal").innerHTML = "";
+       document.querySelector("#contenedorPrincipal").innerHTML = peticion.response;
+    
 
-                case 'liveDemo':
-                        BotonLiveDemo();           
-                    break;
+});    
+}
+LoadLoginScreen();
 
-                case 'customCheck':
-                        Recordarme();
-                    break;
+// listen for click events
+document.addEventListener('click', function(e) {
+        
 
-                case 'createAcount':
-                        botonCreateCuenta();
-                    break;
+    switch (e.target.id)
+    {
+        case 'login':
+                BotonLogeo(e);
+            break;
 
-            }
-            
-        });
+        case 'liveDemo':
+                BotonLiveDemo(e);           
+            break;
 
+        case 'customCheck':
+                Recordarme();
+            break;
+
+        case 'createAcount':
+                botonCreateCuenta(e);
+            break;
+
+            case 'createRegistreAccount':
+                botonRegistrerAcount(e);
+            break;
+
+            case 'createBackToLogin':
+                    backToLogin(e);
+                break;
+          
+
+    }
+    
 });
 
 
-function BotonLogeo() {
+
+function backToLogin(e) {
+    e.preventDefault();
+    LoadLoginScreen();
+}
+
+// Login Button
+function BotonLogeo(e) {
+    e.preventDefault();
     var password = document.querySelector('#InputPassword').value;
     var email = document.querySelector('#InputEmail').value;
     
-    fetch('http://localhost:3000/auth/login', {
+    fetch('http://energytec.ddns.net:4000/auth/login', {
         method: 'POST', 
         body: JSON.stringify({
             mail:email,
@@ -66,12 +90,13 @@ function BotonLogeo() {
 }
 
 
-function BotonLiveDemo() {
+function BotonLiveDemo(e) {
+    e.preventDefault();
     var password = "contraseña";
-    var email = "info@energytec.com.ar";
+    var email = "visualizador@mail.com";
     console.log(email + password);
 
-    fetch('http://localhost:3000/auth/login', {
+    fetch('http://energytec.ddns.net:4000/auth/login', {
         method: 'POST', 
         body: JSON.stringify({
             mail:email,
@@ -91,16 +116,18 @@ function BotonLiveDemo() {
         })
       .catch(error => console.error('Error:', error));
 }
-
+// Clikeo sobre rememberme
 function Recordarme() {
     console.log("recordar cuenta");
 }
 
-function botonCreateCuenta() {
-    console.log("crear cuenta");
+// btn crear cuenta
+function botonCreateCuenta(e) {
+    e.preventDefault();
+    LoadRegistrer();
 }
 
-
+// function to load the principal dashboard
 function LoadPrincipal() {
     
 // load login html
@@ -108,12 +135,67 @@ let peticion = new XMLHttpRequest();
 peticion.open("get", "html/principal.txt");
 peticion.send();
 peticion.addEventListener("load", ()=> {
+    document.querySelector("#contenedorPrincipal").innerHTML = "";
     document.querySelector("#contenedorPrincipal").innerHTML = peticion.response;
 });
 }
 
-
+// function to load the registrer page
+function LoadRegistrer() {
+    
+    // load login html
+    let peticion = new XMLHttpRequest();
+    peticion.open("get", "html/register.txt");
+    peticion.send();
+    peticion.addEventListener("load", ()=> {
+        document.querySelector("#contenedorPrincipal").innerHTML = "";
+        document.querySelector("#contenedorPrincipal").innerHTML = peticion.response;
+    });
+    }
 
   
+function botonRegistrerAcount(e)
+{
+    e.preventDefault();
+    var firstName = document.querySelector('#createFirstName').value;
+    var lastName = document.querySelector('#createLastName').value;
+    var email = document.querySelector('#createInputEmail').value;
+    var pass = document.querySelector('#createInputPassword').value;
+    var Repeatpass = document.querySelector('#createRepeatPassword').value;
+    var InputRepeatpass = document.querySelector('#createRepeatPassword');
 
-     
+   
+    if (pass === Repeatpass){
+
+        if (firstName != null && lastName != null && email != null && pass != null) {
+
+         let token = readCookie('token');
+         return fetch('http://energytec.ddns.net:4000/newUser', {
+             method: 'POST',
+             body: JSON.stringify({
+                "name": firstName,
+                "surname": lastName,
+                "mail": email,
+                "password": pass
+             }),  
+             headers:{
+               'Content-Type': 'application/json',
+               'Authorization': token
+             }
+           }).then(dat => {
+                 if (dat.status == 201){
+                    LoadLoginScreen();
+                  } else if (dat.status == 204){
+                   toastr["error"]("Error creando el usuario", "Error");
+                 } else {
+                   toastr["error"]("Error creando el usuario", "Error");
+                 }
+             })
+           .catch(error => console.warn(error));
+
+
+       }
+    } else {
+        InputRepeatpass.setAttribute('class', 'border border-danger');
+    }
+}
