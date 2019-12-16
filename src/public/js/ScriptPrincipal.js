@@ -15,7 +15,6 @@ this.state.actualStateListChart = true;
   Click Event Listener 
 */
 document.addEventListener('click', function (e) {
-
 // Listener for the IDs
 switch (e.target.id)
 {   
@@ -64,12 +63,16 @@ switch (e.target.id)
     break;
     case 'settingsButton':
             SettingsButton(e);       
-        break;
+    break;
+
+    case 'buttonDashboard':
+        LoadDashboard(e);
+    break;
 }
 
 });
 
-function LogOut(params) {
+function LogOut() {
     ClearVariables();
     LoadLoginScreen();
 }
@@ -77,7 +80,7 @@ function LogOut(params) {
 /**
  * ths function load the first time parameters to search events
  */
-function LoadFirstTimeParameters(params) {
+function LoadFirstTimeParameters() {
     let currentDate = new Date();
     let to = Number(currentDate);
     let from = to - (86400*1000);
@@ -294,13 +297,17 @@ function LoadDeviceinVisorDos(id) {
  * @param {} i 
  */
 function LoadEvents(i) {
-    console.log("loadEvents");
+    console.log("loadEvents1");
     console.log(i);
+    console.log(this.state.TimeFrom);
+    console.log(this.state.TimeTo);
     APIarrayEvents(Number(i), this.state.TimeFrom, this.state.TimeTo).then(response => {
-        console.log(response);
+        console.log("2");
+        console.log("events" + response);
         this.state.actualEvents = response;
         ChangeViewMode();
     });
+    console.log("3");
 }
     
 
@@ -522,3 +529,9 @@ function ShowAddDeviceScreen()
 
 }
 
+function LoadDashboard(e)
+{ 
+    e.preventDefault();
+    InitDashboard();
+
+}

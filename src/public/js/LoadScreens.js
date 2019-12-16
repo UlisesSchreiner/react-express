@@ -4,19 +4,22 @@ this.state = {
     screen01State: Boolean,
     screen02State: Boolean,
     screen03State: Boolean,
-    screenAccSettings: Boolean
+    screenAccSettings: Boolean,
+    screenDashboard01: Boolean
 }
     this.state.actualScreen = 0;
     this.state.screen01State = false;
     this.state.screen02State = false;
     this.state.screen03State = false;
     this.state.screenAccSettings = false;
+    this.state.screenDashboard01 = false;
 
     function ClearVariables() {
         this.state.screen01State = false;
         this.state.screen02State = false;
         this.state.screen03State = false;
-        this.state.screenAccSettings = false;        
+        this.state.screenAccSettings = false;
+        this.state.screenDashboard01 = false;        
     }
 
     function ClearContCuadros() {
@@ -71,6 +74,33 @@ function LoadScreen03() {
 }
 
 
+function LoadScreenDashboard01() {
+    if (this.state.screenDashboard01) {return false;}
+
+    var contenedorCuadrosDashboard = document.querySelector('#contenedorCuadros');
+        contenedorCuadrosDashboard.innerHTML = "";
+    var divContDashboard = document.createElement('div');
+        divContDashboard.setAttribute('id', 'visorCuadrosDhasboard');
+
+    var ul = document.createElement('ul');
+        ul.setAttribute('id', 'ulDashboard');
+
+        divContDashboard.appendChild(ul);
+
+    var divContNavVar = document.createElement('div');
+        divContNavVar.setAttribute('id', 'visorNavVarDhasboard');
+
+    var divBoton = document.createElement('div');
+        divBoton.setAttribute('id', 'divBotonNavDash');
+    var img = document.createElement('img');
+        img.setAttribute('src', '/images/plus.png');
+        img.setAttribute('id', 'imgPlusDashboard');
+        divBoton.appendChild(img);
+        divContNavVar.appendChild(divBoton);
+
+        contenedorCuadrosDashboard.appendChild(divContNavVar);
+        contenedorCuadrosDashboard.appendChild(divContDashboard);
+}
 
 
 

@@ -17,10 +17,10 @@
           <hr class="sidebar-divider my-0">
 
           <!-- Nav Item - Dashboard -->
-          <li class="nav-item active">
-            <a class="nav-link" href="index.html">
-              <i class="fas fa-fw fa-tachometer-alt"></i>
-              <span>Dashboard</span></a>
+          <li class="nav-item active" id="buttonDashboard">
+            <a class="nav-link" id="buttonDashboard" href="#"> 
+              <i class="fas fa-fw fa-tachometer-alt" id="buttonDashboard"></i>
+              <span id="buttonDashboard">Dashboard</span></a>
           </li>
 
           <!-- Divider -->
@@ -291,6 +291,9 @@
         </div-->
 
          <!--div id="visorTres" class="card shadow"-->
+
+        <!-- div id="visorCuadrosDhasboard"><div/ -->
+
 
         </div>
         </div>

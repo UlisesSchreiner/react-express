@@ -221,3 +221,61 @@
     width: 15%; 
     height:9%;
 }
+
+/* VISOR DASHBOARD */
+
+#visorCuadrosDhasboard {
+    position:absolute;
+    overflow-y: scroll;
+    top: 20%;
+    width: 100%;
+    height: 80%;
+}
+
+
+#visorNavVarDhasboard {
+    position:absolute;
+    top: 8%;
+    width: 100%;
+    height: 12%;
+}
+
+#liCardDashboard {
+        float: left;
+        margin: 10px;
+        list-style-type: none;
+}
+#divCardDashboard {
+    float: left;
+    margin: 10px;
+    list-style-type: none;
+    width: 450px; 
+    height: 450px;
+    border-radius: 15px;
+}
+
+#divBotonNavDash {
+    position: absolute;
+    width: 8%; 
+    height: 90%;
+    right: 2%;
+    border-radius: 15px;
+    filter: drop-shadow(5px 5px 10px #b2bef5);
+    
+}
+#imgPlusDashboard {
+    width: 90px; 
+    height: 90px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#imgPlusDashboard:hover {
+    width: 90px; 
+    height: 90px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: drop-shadow(5px 5px 10px #444);
+}
