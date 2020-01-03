@@ -155,3 +155,17 @@ function APIarrayEvents(i, from, to){
     }
 
     
+    function APIarrayDashboards(){
+      let token = readCookie('token');
+      return fetch('http://energytec.ddns.net:4000/dashboard/', {  
+          headers:{
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        }).then((response) => response.json())
+        .then((responseData) => {
+          console.log(responseData);
+          return responseData;
+        })
+        .catch(error => console.warn(error));
+      }
