@@ -454,6 +454,7 @@ function ShowAddDeviceScreen()
     let form = document.createElement('form');
     let input = document.createElement('input');
     let input2 = document.createElement('input');
+    let input3 = document.createElement('input');
     let select = document.createElement('select');
     let option1 = document.createElement('option');
     let option2 = document.createElement('option');
@@ -475,6 +476,11 @@ function ShowAddDeviceScreen()
     input2.setAttribute('placeholder', 'Device Password');
     input2.setAttribute('id', 'inputNewDevicePass');
     form.appendChild(input2);
+    input3.setAttribute('type', 'text');
+    input3.setAttribute('placeholder', 'Device Name');
+    input3.setAttribute('id', 'inputNewDeviceName');
+    form.appendChild(input3);
+
 
     option1.setAttribute('key', '1');
     option1.innerText = 'Termotanque Solar';
@@ -523,8 +529,9 @@ function ShowAddDeviceScreen()
        let events = Number(input.value);
        let password = input2.value;
        let dispositivo = select.selectedIndex + 1;
-    
-    APIcreateNewDeice(events, password, dispositivo).then(LoadDevicesInVisorUno());
+       let name = input3.value;
+
+    APIcreateNewDeice(name, events, password, dispositivo).then(LoadDevicesInVisorUno());
    }
 
 }

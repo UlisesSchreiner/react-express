@@ -18,12 +18,13 @@ function APIarrayDevices(){
     /**
      * this function create a new device
      */
-    function APIcreateNewDeice(events, password, dispositivo) {
+    function APIcreateNewDeice(name ,events, password, dispositivo) {
       
         let token = readCookie('token');
         return fetch('http://energytec.ddns.net:4000/device', {
             method: 'POST',
             body: JSON.stringify({
+                "name": name,
                 "events":Number(events),
                 "password":password,
                 "dispositivo":Number(dispositivo)
@@ -169,3 +170,38 @@ function APIarrayEvents(i, from, to){
         })
         .catch(error => console.warn(error));
       }
+
+      function APIarrayAlerts(){
+        console.log("API alerts");
+        let token = readCookie('token');
+        return fetch('http://energytec.ddns.net:4000/alert/', {  
+            headers:{
+              'Content-Type': 'application/json',
+              'Authorization': token
+            }
+          }).then((response) => response.json())
+          .then((responseData) => {
+            console.log(responseData);
+            return responseData;
+          })
+          .catch(error => console.warn(error));
+        }
+
+        function APIupdateAlertTags(objectArray){
+          console.log("update tags");
+          let token = readCookie('token');
+          return fetch('http://energytec.ddns.net:4000/alert/upTags', {
+            method: 'POST',
+            body: JSON.stringify({
+            "array":objectArray
+            }),  
+              headers:{
+                'Content-Type': 'application/json',
+                'Authorization': token
+              }
+            }).then((responseData) => {
+              console.log(responseData);
+              return responseData;
+            })
+            .catch(error => console.log("error en la api"));
+          }

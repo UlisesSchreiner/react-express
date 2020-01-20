@@ -137,6 +137,7 @@ peticion.send();
 peticion.addEventListener("load", ()=> {
     document.querySelector("#contenedorPrincipal").innerHTML = "";
     document.querySelector("#contenedorPrincipal").innerHTML = peticion.response;
+    LoadAlertArr();
 });
 }
 
